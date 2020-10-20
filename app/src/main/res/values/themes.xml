@@ -47,4 +47,13 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
+    <style name="Theme.MraJob.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MraJob.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MraJob.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
