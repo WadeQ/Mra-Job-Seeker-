@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wadektech.mrajob.R;
 import com.wadektech.mrajob.models.JobSeeker;
+import com.wadektech.mrajob.ui.home.HomeFragment;
 import com.wadektech.mrajob.utils.Constants;
 
 import java.util.Arrays;
@@ -89,7 +90,8 @@ public class SplashActivity extends AppCompatActivity {
           @Override
           public void onDataChange(@NonNull DataSnapshot snapshot) {
             if (snapshot.exists()){
-              Toast.makeText(SplashActivity.this, "User already registered...", Toast.LENGTH_SHORT).show();
+              JobSeeker jobSeeker = snapshot.getValue(JobSeeker.class);
+              navigateToHome(jobSeeker);
             }else {
               displayUserRegistrationLayout();
             }
@@ -101,6 +103,12 @@ public class SplashActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
           }
         });
+  }
+
+  private void navigateToHome(JobSeeker jobSeeker) {
+    Constants.currentUser = jobSeeker ;
+    startActivity(new Intent(SplashActivity.this, JobSeekerHomeActivity.class));
+    finish();
   }
 
   private void displayUserRegistrationLayout() {
@@ -144,8 +152,8 @@ public class SplashActivity extends AppCompatActivity {
                   dialog.dismiss();
                   Toast.makeText(this, "Error while saving user "+e.getMessage(),Toast.LENGTH_SHORT).show();
                 }).addOnSuccessListener(aVoid -> {
-                  Toast.makeText(this, "Registered successfully",Toast.LENGTH_SHORT).show();
                   dialog.dismiss();
+                  navigateToHome(jobSeeker);
                 });
           }
         });
@@ -171,7 +179,7 @@ public class SplashActivity extends AppCompatActivity {
   @SuppressLint("CheckResult")
   private void initAuth() {
     mProgress.setVisibility(View.VISIBLE);
-    Completable.timer(5, TimeUnit.SECONDS,
+    Completable.timer(2, TimeUnit.SECONDS,
         AndroidSchedulers.mainThread())
         .subscribe(() ->
             firebaseAuth.addAuthStateListener(authStateListener)
