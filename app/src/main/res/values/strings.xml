@@ -2,4 +2,9 @@
     <string name="app_name">Mra Job</string>
     <string name="sign_in_with_phone">Sign In with Phone</string>
     <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="register_user">Not signed in? Lets start with creating your account.</string>
+    <string name="first_name">Enter First Name</string>
+    <string name="last_name">Enter Last Name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="btn_continue">CONTINUE</string>
 </resources>
