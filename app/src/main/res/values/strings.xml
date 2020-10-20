@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Mra Job</string>
+    <string name="sign_in_with_phone">Sign In with Phone</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
 </resources>

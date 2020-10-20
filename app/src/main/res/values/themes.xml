@@ -18,4 +18,24 @@
         <item name="android:windowBackground">@drawable/mra_splash</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="colorPrimary">#FF03DAC5</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/mra_splash</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>
