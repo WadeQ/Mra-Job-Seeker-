@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "459188154389",
+    "firebase_url": "https://mra-job.firebaseio.com",
+    "project_id": "mra-job",
+    "storage_bucket": "mra-job.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459188154389:android:a88fe80263622db7371e1c",
+        "android_client_info": {
+          "package_name": "com.wadektech.mrajob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459188154389-t6l647gpo5l6vongs3p6cj843qip93ij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wadektech.mrajob",
+            "certificate_hash": "a53ad45afca3ae36fd05d6753f4bd0d94fd27c0b"
+          }
+        },
+        {
+          "client_id": "459188154389-ejl39v1ucnr30a7g3v2oksgmnjm08b30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaQgOIPYniDYgH_VvEl-L6bC3IrVWQUoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459188154389-ejl39v1ucnr30a7g3v2oksgmnjm08b30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
