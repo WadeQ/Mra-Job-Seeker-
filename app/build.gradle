@@ -44,6 +44,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     //rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //firebase ui
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
 }
