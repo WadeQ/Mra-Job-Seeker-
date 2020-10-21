@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -37,6 +39,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.rpc.context.AttributeContext;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -45,6 +54,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.wadektech.mrajob.R;
+import com.wadektech.mrajob.utils.Constants;
 
 import java.util.Objects;
 
@@ -56,6 +66,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
   FusedLocationProviderClient fusedLocationProviderClient;
   LocationCallback locationCallback;
   LocationRequest locationRequest;
+
+  DatabaseReference onlineStatusRef, userRef, jobSeekerLocationRef ;
+  GeoFire geoFire;
+  ValueEventListener onlineStatusValueEventListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+      if (snapshot.exists())
+        userRef.onDisconnect().removeValue();
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+      Snackbar.make(mapFragment.requireView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
+    }
+  };
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
@@ -74,6 +99,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
   @SuppressLint("MissingPermission")
   private void initLocation() {
+    onlineStatusRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+    jobSeekerLocationRef = FirebaseDatabase.getInstance().getReference(Constants.JOB_SEEKER_LOCATION_REFERENCE);
+    userRef = FirebaseDatabase.getInstance().getReference(Constants.JOB_SEEKER_LOCATION_REFERENCE)
+        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+    geoFire = new GeoFire(jobSeekerLocationRef);
+
+    updateSeekerOnlineStatus();
+
     locationRequest = new LocationRequest();
     locationRequest.setSmallestDisplacement(10f);
     locationRequest.setInterval(5000);
@@ -88,6 +121,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         LatLng latLng = new LatLng(locationResult.getLastLocation().getLatitude(),
             locationResult.getLastLocation().getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
+
+        geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+            new GeoLocation(locationResult.getLastLocation().getLatitude(),
+                locationResult.getLastLocation().getLongitude()), (key, error) -> {
+                  if (error != null){
+                    Snackbar.make(mapFragment.requireView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
+                  } else {
+                    Snackbar.make(mapFragment.requireView(), "You are online...", Snackbar.LENGTH_LONG).show();
+                  }
+                });
       }
     };
 
@@ -147,8 +190,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    updateSeekerOnlineStatus();
+  }
+
+  private void updateSeekerOnlineStatus() {
+    onlineStatusRef.addValueEventListener(onlineStatusValueEventListener);
+  }
+
+  @Override
   public void onDestroy() {
-    super.onDestroy();
     fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    geoFire.removeLocation(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+    onlineStatusRef.removeEventListener(onlineStatusValueEventListener);
+    super.onDestroy();
   }
 }
