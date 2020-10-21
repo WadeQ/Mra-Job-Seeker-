@@ -60,4 +60,10 @@ dependencies {
     //ButterKnife
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+
+    //Dexter
+    implementation 'com.karumi:dexter:6.1.2'
+
+    //location
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 }
