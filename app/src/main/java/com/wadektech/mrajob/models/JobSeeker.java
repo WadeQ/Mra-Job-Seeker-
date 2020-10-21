@@ -1,17 +1,29 @@
 package com.wadektech.mrajob.models;
 
 public class JobSeeker {
-  private String firstName, lastName, phoneNumber ;
+  private String firstName;
+  private String lastName;
+  private String phoneNumber ;
+  private String imageUrl ;
   private double rating;
 
   public JobSeeker() {
   }
 
-  public JobSeeker(String firstName, String lastName, String phoneNumber, double rating) {
+  public JobSeeker(String firstName, String lastName, String phoneNumber,String imageUrl, double rating) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.phoneNumber = phoneNumber;
+    this.imageUrl = imageUrl ;
     this.rating = rating;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   public String getFirstName() {
