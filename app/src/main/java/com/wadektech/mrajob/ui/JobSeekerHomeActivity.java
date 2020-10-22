@@ -153,36 +153,27 @@ public class JobSeekerHomeActivity extends AppCompatActivity {
               String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
               StorageReference rootRef = storageReference.child("profileImages/"+key);
               rootRef.putFile(imageUri)
-                  .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                      alertDialog.dismiss();
-                      Snackbar.make(drawer, "Upload error "
-                          + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                    }
+                  .addOnFailureListener(e -> {
+                    alertDialog.dismiss();
+                    Snackbar.make(drawer, "Upload error "
+                        + e.getMessage(), Snackbar.LENGTH_LONG).show();
                   })
-                  .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                      if (task.isSuccessful()) {
-                        rootRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                          @Override
-                          public void onSuccess(Uri uri) {
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("profileImages", uri.toString());
-                            JobSeekerUtils.updateJobSeekerCredentials(drawer, map);
-                          }
-                        });
-                      }
-                      alertDialog.dismiss();
+                  .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                      rootRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                          Map<String, Object> map = new HashMap<>();
+                          map.put("profileImages", uri.toString());
+                          JobSeekerUtils.updateJobSeekerCredentials(drawer, map);
+                        }
+                      });
                     }
-                  }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                  double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                  alertDialog.setMessage(new StringBuilder("Uploading: ").append(progress).append("%"));
-                }
-              });
+                    alertDialog.dismiss();
+                  }).addOnProgressListener(snapshot -> {
+                    double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                    alertDialog.setMessage(new StringBuilder("Uploading: ").append(progress).append("%"));
+                  });
             }
           })
           .setCancelable(false);

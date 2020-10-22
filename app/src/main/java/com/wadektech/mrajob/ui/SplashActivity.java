@@ -28,10 +28,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.wadektech.mrajob.R;
 import com.wadektech.mrajob.models.JobSeeker;
 import com.wadektech.mrajob.ui.home.HomeFragment;
 import com.wadektech.mrajob.utils.Constants;
+import com.wadektech.utils.JobSeekerUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import timber.log.Timber;
 
 public class SplashActivity extends AppCompatActivity {
   private final static int LOGIN_REQUEST_CODE = 1988;
@@ -73,9 +77,23 @@ public class SplashActivity extends AppCompatActivity {
     authStateListener = myFirebaseAuth -> {
       FirebaseUser user = myFirebaseAuth.getCurrentUser();
       if (user != null){
+        //update token
+        FirebaseInstanceId
+            .getInstance()
+            .getInstanceId()
+            .addOnFailureListener(e -> Toast.makeText(SplashActivity.this, e.getMessage(),
+                Toast.LENGTH_SHORT).show()).addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+          @Override
+          public void onSuccess(InstanceIdResult instanceIdResult) {
+            Timber.e("Saved token %s", instanceIdResult.getToken());
+            JobSeekerUtils.updateToken(SplashActivity.this, instanceIdResult.getToken());
+          }
+        });
         signInReturningUser();
+
       } else {
         displaySignInLayout();
+
       }
     };
   }

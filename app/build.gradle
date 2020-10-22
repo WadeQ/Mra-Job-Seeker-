@@ -76,4 +76,7 @@ dependencies {
 
     //circle image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
