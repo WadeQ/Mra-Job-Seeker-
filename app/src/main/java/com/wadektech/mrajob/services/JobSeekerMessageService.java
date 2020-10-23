@@ -1,4 +1,4 @@
-package com.wadektech.services;
+package com.wadektech.mrajob.services;
 
 import androidx.annotation.NonNull;
 
@@ -6,9 +6,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.wadektech.mrajob.utils.Constants;
-import com.wadektech.utils.JobSeekerUtils;
+import com.wadektech.mrajob.utils.JobSeekerUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 

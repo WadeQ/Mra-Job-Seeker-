@@ -1,4 +1,4 @@
-package com.wadektech.mrajob.ui;
+package com.wadektech.mrajob.auth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +31,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.wadektech.mrajob.R;
 import com.wadektech.mrajob.models.JobSeeker;
-import com.wadektech.mrajob.ui.home.HomeFragment;
+import com.wadektech.mrajob.ui.views.JobSeekerHomeActivity;
 import com.wadektech.mrajob.utils.Constants;
-import com.wadektech.utils.JobSeekerUtils;
+import com.wadektech.mrajob.utils.JobSeekerUtils;
 
 import java.util.Arrays;
 import java.util.List;

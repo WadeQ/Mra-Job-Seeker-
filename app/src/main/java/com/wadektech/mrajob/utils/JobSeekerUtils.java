@@ -1,4 +1,4 @@
-package com.wadektech.utils;
+package com.wadektech.mrajob.utils;
 
 import android.content.Context;
 import android.view.View;
@@ -8,7 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.wadektech.mrajob.models.Token;
-import com.wadektech.mrajob.utils.Constants;
+
 import java.util.Map;
 
 
@@ -26,7 +26,7 @@ public class JobSeekerUtils {
   }
 
   public static void updateToken(Context context, String token) {
-    Token userToken = new Token();
+    Token userToken = new Token(token);
     FirebaseDatabase
         .getInstance()
         .getReference(Constants.TOKEN_REFERENCE)
