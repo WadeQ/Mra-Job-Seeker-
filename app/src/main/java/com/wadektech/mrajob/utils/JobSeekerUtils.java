@@ -1,4 +1,4 @@
-package com.wadektech.utils;
+package com.wadektech.mrajob.utils;
 
 import android.content.Context;
 import android.view.View;
@@ -8,8 +8,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.wadektech.mrajob.models.Token;
-import com.wadektech.mrajob.utils.Constants;
+
 import java.util.Map;
+import java.util.Objects;
 
 
 public class JobSeekerUtils {
@@ -26,11 +27,11 @@ public class JobSeekerUtils {
   }
 
   public static void updateToken(Context context, String token) {
-    Token userToken = new Token();
+    Token userToken = new Token(token);
     FirebaseDatabase
         .getInstance()
         .getReference(Constants.TOKEN_REFERENCE)
-        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
         .setValue(userToken)
         .addOnFailureListener(e ->
             Toast.makeText(context, "Error saving token "+e.getMessage(),Toast.LENGTH_SHORT)

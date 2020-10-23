@@ -9,12 +9,9 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
-
 import androidx.core.app.NotificationCompat;
-
 import com.wadektech.mrajob.R;
 import com.wadektech.mrajob.models.JobSeeker;
-import com.wadektech.services.JobSeekerMessageService;
 
 public class Constants {
   public static final String JOB_SEEKER_INFO_REFERENCE = "JobSeekerInfo";

@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -39,6 +41,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -56,7 +59,12 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.wadektech.mrajob.R;
 import com.wadektech.mrajob.utils.Constants;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
@@ -67,12 +75,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
   LocationCallback locationCallback;
   LocationRequest locationRequest;
 
-  DatabaseReference onlineStatusRef, userRef, jobSeekerLocationRef ;
+  DatabaseReference onlineStatusRef, userRef, jobSeekerLocationRef;
   GeoFire geoFire;
   ValueEventListener onlineStatusValueEventListener = new ValueEventListener() {
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-      if (snapshot.exists())
+      if (snapshot.exists() && userRef != null)
         userRef.onDisconnect().removeValue();
     }
 
@@ -97,15 +105,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
   }
 
-  @SuppressLint("MissingPermission")
+
   private void initLocation() {
     onlineStatusRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-    jobSeekerLocationRef = FirebaseDatabase.getInstance().getReference(Constants.JOB_SEEKER_LOCATION_REFERENCE);
-    userRef = FirebaseDatabase.getInstance().getReference(Constants.JOB_SEEKER_LOCATION_REFERENCE)
-        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-    geoFire = new GeoFire(jobSeekerLocationRef);
 
-    updateSeekerOnlineStatus();
+    if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
+        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      Snackbar.make(requireView(),getString(R.string.permission_required),
+          Snackbar.LENGTH_LONG).show();
+      return;
+    }
 
     locationRequest = new LocationRequest();
     locationRequest.setSmallestDisplacement(10f);
@@ -122,20 +132,55 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             locationResult.getLastLocation().getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
 
-        geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-            new GeoLocation(locationResult.getLastLocation().getLatitude(),
-                locationResult.getLastLocation().getLongitude()), (key, error) -> {
-                  if (error != null){
-                    Snackbar.make(mapFragment.requireView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
-                  } else {
-                    Snackbar.make(mapFragment.requireView(), "You are online...", Snackbar.LENGTH_LONG).show();
-                  }
-                });
-      }
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        List<Address> addressList ;
+        try {
+          addressList = geocoder.getFromLocation(locationResult.getLastLocation().getLatitude(),
+              locationResult.getLastLocation().getLongitude(),1);
+          String cityName = addressList.get(0).getLocality();
+
+          jobSeekerLocationRef = FirebaseDatabase
+              .getInstance()
+              .getReference(Constants.JOB_SEEKER_LOCATION_REFERENCE)
+              .child(cityName);
+
+          userRef = jobSeekerLocationRef.child(Objects.requireNonNull(
+              FirebaseAuth
+                  .getInstance()
+                  .getCurrentUser())
+              .getUid());
+
+          geoFire = new GeoFire(jobSeekerLocationRef);
+          geoFire.setLocation(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(),
+              new GeoLocation(locationResult.getLastLocation().getLatitude(),
+                  locationResult.getLastLocation().getLongitude()), (key, error) -> {
+                if (error != null) {
+                  Snackbar.make(mapFragment.requireView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
+                } else {
+                  Snackbar.make(mapFragment.requireView(), "You are online...", Snackbar.LENGTH_LONG).show();
+                }
+              });
+
+          updateSeekerOnlineStatus();
+
+        } catch (IOException e) {
+          e.printStackTrace();
+          Snackbar.make(requireView(), ""+e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        }
+
+          }
+
     };
 
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-    fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+    if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
+        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      Snackbar.make(requireView(),getString(R.string.permission_required),
+          Snackbar.LENGTH_LONG).show();
+      return;
+    }
+    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
   }
 
   @Override
@@ -145,9 +190,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     Dexter.withContext(getContext())
         .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         .withListener(new PermissionListener() {
-          @SuppressLint("MissingPermission")
           @Override
           public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat
+                .checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+              Snackbar.make(requireView(),getString(R.string.permission_required),
+                  Snackbar.LENGTH_LONG).show();
+              return;
+            }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.setOnMyLocationButtonClickListener(() -> {
@@ -183,9 +235,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     try {
       boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.mra_maps_style));
       if (!success)
-        Log.e("WadekTechErrors", "Error parsing map");
+        Timber.e("Error parsing map");
     } catch (Resources.NotFoundException notFoundException){
-      Log.e("WadekTechErrors", notFoundException.getMessage());
+      Timber.e("Exception %s", notFoundException.getMessage());
     }
   }
 
