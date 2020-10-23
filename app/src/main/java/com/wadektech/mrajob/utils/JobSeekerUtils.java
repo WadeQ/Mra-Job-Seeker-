@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.wadektech.mrajob.models.Token;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class JobSeekerUtils {
@@ -30,7 +31,7 @@ public class JobSeekerUtils {
     FirebaseDatabase
         .getInstance()
         .getReference(Constants.TOKEN_REFERENCE)
-        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
         .setValue(userToken)
         .addOnFailureListener(e ->
             Toast.makeText(context, "Error saving token "+e.getMessage(),Toast.LENGTH_SHORT)
