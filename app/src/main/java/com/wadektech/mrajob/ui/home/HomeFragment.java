@@ -67,7 +67,6 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
-
   HomeViewModel homeViewModel;
   GoogleMap mMap;
   SupportMapFragment mapFragment;
@@ -105,14 +104,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
   }
 
-
   private void initLocation() {
     onlineStatusRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
 
     if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Snackbar.make(requireView(),getString(R.string.permission_required),
+      Snackbar.make(mapFragment.requireView(),getString(R.string.permission_required),
           Snackbar.LENGTH_LONG).show();
       return;
     }
@@ -165,7 +163,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         } catch (IOException e) {
           e.printStackTrace();
-          Snackbar.make(requireView(), ""+e.getMessage(), Snackbar.LENGTH_SHORT).show();
+          Snackbar.make(mapFragment.requireView(), ""+e.getMessage(), Snackbar.LENGTH_SHORT).show();
         }
 
           }
@@ -176,7 +174,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Snackbar.make(requireView(),getString(R.string.permission_required),
+      Snackbar.make(mapFragment.requireView(),getString(R.string.permission_required),
           Snackbar.LENGTH_LONG).show();
       return;
     }
@@ -196,7 +194,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat
                 .checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-              Snackbar.make(requireView(),getString(R.string.permission_required),
+              Snackbar.make(mapFragment.requireView(),getString(R.string.permission_required),
                   Snackbar.LENGTH_LONG).show();
               return;
             }
