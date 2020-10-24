@@ -1,42 +1,71 @@
 {
   "project_info": {
-    "project_number": "459188154389",
-    "firebase_url": "https://mra-job.firebaseio.com",
-    "project_id": "mra-job",
-    "storage_bucket": "mra-job.appspot.com"
+    "project_number": "122581972898",
+    "firebase_url": "https://mra-client.firebaseio.com",
+    "project_id": "mra-client",
+    "storage_bucket": "mra-client.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:459188154389:android:a88fe80263622db7371e1c",
+        "mobilesdk_app_id": "1:122581972898:android:1d6a287fc08876b82ea4fb",
         "android_client_info": {
-          "package_name": "com.wadektech.mrajob"
+          "package_name": "com.wadektech.mraclient"
         }
       },
       "oauth_client": [
         {
-          "client_id": "459188154389-t6l647gpo5l6vongs3p6cj843qip93ij.apps.googleusercontent.com",
+          "client_id": "122581972898-nmpuct3bkhau6o1laeg0ui7sekjjafdl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.wadektech.mrajob",
+            "package_name": "com.wadektech.mraclient",
             "certificate_hash": "a53ad45afca3ae36fd05d6753f4bd0d94fd27c0b"
           }
         },
         {
-          "client_id": "459188154389-ejl39v1ucnr30a7g3v2oksgmnjm08b30.apps.googleusercontent.com",
+          "client_id": "122581972898-hn9at1dkm70kp9h184sofuk4ilin1ipv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDaQgOIPYniDYgH_VvEl-L6bC3IrVWQUoY"
+          "current_key": "AIzaSyB39L-fH8DAJ1oVsOmhToN05slDqQoIECc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "459188154389-ejl39v1ucnr30a7g3v2oksgmnjm08b30.apps.googleusercontent.com",
+              "client_id": "122581972898-hn9at1dkm70kp9h184sofuk4ilin1ipv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122581972898:android:a195b504d96e002f2ea4fb",
+        "android_client_info": {
+          "package_name": "com.wadektech.mrajob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122581972898-hn9at1dkm70kp9h184sofuk4ilin1ipv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB39L-fH8DAJ1oVsOmhToN05slDqQoIECc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "122581972898-hn9at1dkm70kp9h184sofuk4ilin1ipv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
