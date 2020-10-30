@@ -73,14 +73,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
   FusedLocationProviderClient fusedLocationProviderClient;
   LocationCallback locationCallback;
   LocationRequest locationRequest;
+  private boolean isFirstTime = true ;
 
   DatabaseReference onlineStatusRef, userRef, jobSeekerLocationRef;
   GeoFire geoFire;
   ValueEventListener onlineStatusValueEventListener = new ValueEventListener() {
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-      if (snapshot.exists() && userRef != null)
+      if (snapshot.exists() && userRef != null){
         userRef.onDisconnect().removeValue();
+        isFirstTime = true;
+      }
     }
 
     @Override
@@ -154,8 +157,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                   locationResult.getLastLocation().getLongitude()), (key, error) -> {
                 if (error != null) {
                   Snackbar.make(mapFragment.requireView(), error.getMessage(), Snackbar.LENGTH_LONG).show();
-                } else {
-                  Snackbar.make(mapFragment.requireView(), "You are online...", Snackbar.LENGTH_LONG).show();
                 }
               });
 
@@ -237,6 +238,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     } catch (Resources.NotFoundException notFoundException){
       Timber.e("Exception %s", notFoundException.getMessage());
     }
+
+    Snackbar.make(mapFragment.requireView(), "You are online...",
+        Snackbar.LENGTH_LONG).show();
   }
 
   @Override
