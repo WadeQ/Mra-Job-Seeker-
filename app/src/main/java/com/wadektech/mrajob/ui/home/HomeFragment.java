@@ -116,9 +116,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     locationRequest = new LocationRequest();
-    locationRequest.setSmallestDisplacement(10f);
-    locationRequest.setInterval(5000);
-    locationRequest.setFastestInterval(3000);
+    locationRequest.setSmallestDisplacement(50f);
+    locationRequest.setInterval(15000);
+    locationRequest.setFastestInterval(10000);
     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     locationCallback = new LocationCallback() {
